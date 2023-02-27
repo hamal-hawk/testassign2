@@ -1,4 +1,4 @@
-CC=clang
+CC=gcc
 CFLAGS=-std=c99 -I.
 
 DEPS = dberror.h storage_mgr.h test_helper.h buffer_mgr_stat.h buffer_mgr.h 
