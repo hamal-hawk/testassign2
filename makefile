@@ -1,19 +1,27 @@
-CC=gcc
-CFLAGS=-std=c99 -I.
+compiler=gcc
 
-DEPS = dberror.h storage_mgr.h test_helper.h buffer_mgr_stat.h buffer_mgr.h 
-OBJ1 = dberror.o storage_mgr.o buffer_mgr_stat.o buffer_mgr.o test_assign2_1.o
-OBJ2 = dberror.o storage_mgr.o buffer_mgr_stat.o buffer_mgr.o test_assign2_2.o
+x: dberror storage_mgr buffer_mgr_stat buffer_mgr test_assign2_1 link execute_testcase
 
-%.o: %.c $(DEPS)
-	$(CC) -c -o $@ $< $(CFLAGS)
+dberror: dberror.c dberror.h 
+	$(compiler) -c dberror.c
 
-test_assign2_1: $(OBJ1)
-	cc -o  $@ $^ $(CFLAGS)
+buffer_mgr_stat: buffer_mgr_stat.c buffer_mgr_stat.h
+	$(compiler) -c buffer_mgr_stat.c
 
-test_assign2_2: $(OBJ2)
-	cc -o  $@ $^ $(CFLAGS)
+buffer_mgr: buffer_mgr.c buffer_mgr.h ds_define.h
+	$(compiler) -c buffer_mgr.c
 
-clean:
-	rm -f $(OBJ1)
-	rm -f $(OBJ1)
+storage_mgr: storage_mgr.c storage_mgr.h
+	$(compiler) -c storage_mgr.c
+
+test_assign2_1: test_assign2_1.c test_helper.h
+	$(compiler) -c test_assign2_1.c
+
+link: test_assign2_1.o dberror.o buffer_mgr.o storage_mgr.o buffer_mgr_stat.o 
+	$(compiler) -o  test_assign2 test_assign2_1.o dberror.o buffer_mgr.o buffer_mgr_stat.o storage_mgr.o
+
+execute_testcase: test_assign2
+	./test_assign2
+
+clearall: test_assign2_1.o dberror.o storage_mgr.o
+	rm -f  test_assign2 test_assign2_1.o dberror.o buffer_mgr.o buffer_mgr_stat.o storage_mgr.o 
